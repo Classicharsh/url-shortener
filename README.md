@@ -1,4 +1,6 @@
-Try this :- url-shortener-classicharsh.vercel.app
+Try this :- https://url-shortener-classicharsh.vercel.app/
+
+
 # ⚡ Snip — URL Shortener
 
 A production-ready URL shortener built with React + Vite, Firebase, and Tailwind CSS.
