@@ -56,7 +56,7 @@ export default function Footer() {
         <div className="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-4"
           style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}>
           <p className="text-xs">© {new Date().getFullYear()} Snip. All rights reserved.</p>
-          <p className="text-xs">Made with ❤️ — Ritesh Verma Production</p>
+          <p className="text-xs">Made with love by Harshit Prajapati</p>
         </div>
       </div>
     </footer>
