@@ -39,7 +39,6 @@ const LinkCard = memo(function LinkCard({ link }: Props) {
   };
 
   const handleDelete = async () => {
-    if (!confirmDel) { setConfirmDel(true); return; }
     setDeleting(true);
     try {
       await removeLink(link.id);
@@ -47,6 +46,7 @@ const LinkCard = memo(function LinkCard({ link }: Props) {
     } catch {
       toast.error('Failed to delete');
       setDeleting(false);
+      setConfirmDel(false);
     }
   };
 
@@ -117,7 +117,13 @@ const LinkCard = memo(function LinkCard({ link }: Props) {
         {editing ? (
           <div className="flex items-center gap-1.5 flex-1 min-w-0">
             <span className="text-xs shrink-0" style={{ color: 'var(--text-muted)' }}>
-              {new URL(shortUrl).origin}/
+              {(() => {
+                try {
+                  return new URL(shortUrl).origin;
+                } catch {
+                  return window.location.origin;
+                }
+              })()}/
             </span>
             <input
               value={slugEdit}
@@ -158,14 +164,30 @@ const LinkCard = memo(function LinkCard({ link }: Props) {
               <Link to={`/dashboard/analytics/${link.id}`} className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center" title="Analytics">
                 <BarChart2 className="w-3.5 h-3.5" />
               </Link>
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className={`btn-ghost w-8 h-8 p-0 rounded-lg ${confirmDel ? 'text-red-500 border-red-500/30 bg-red-500/10' : ''}`}
-                title={confirmDel ? 'Confirm delete' : 'Delete'}
-                onBlur={() => setTimeout(() => setConfirmDel(false), 200)}>
-                {deleting ? <LoadingSpinner size="sm" /> : <Trash2 className="w-3.5 h-3.5" />}
-              </button>
+              {confirmDel ? (
+                <div className="flex items-center gap-1 bg-red-500/10 border border-red-500/20 rounded-lg p-0.5 animate-fade-in shrink-0">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="text-red-500 hover:bg-red-500/20 w-7 h-7 flex items-center justify-center rounded"
+                    title="Confirm Delete">
+                    {deleting ? <LoadingSpinner size="sm" /> : <Check className="w-3.5 h-3.5" />}
+                  </button>
+                  <button
+                    onClick={() => setConfirmDel(false)}
+                    className="text-gray-500 hover:bg-gray-500/20 w-7 h-7 flex items-center justify-center rounded"
+                    title="Cancel">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDel(true)}
+                  className="btn-ghost w-8 h-8 p-0 rounded-lg shrink-0"
+                  title="Delete">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
             </>
           )}
         </div>

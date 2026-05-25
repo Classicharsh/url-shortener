@@ -105,8 +105,8 @@ export const useLinksStore = create<LinksState>()((set, get) => ({
     const { unsubscribe } = get();
     if (unsubscribe) {
       unsubscribe();
-      set({ unsubscribe: null });
     }
+    set({ unsubscribe: null, links: [] });
   },
 
   addLink: async (userId, form) => {

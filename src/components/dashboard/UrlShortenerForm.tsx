@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link2, Zap, Settings2, ChevronDown, ChevronUp, Copy, Check, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -260,7 +261,7 @@ export default function UrlShortenerForm({ onCreated, compact }: Props) {
 
             {!user && (
               <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
-                <a href="/login" className="text-brand-500 hover:underline">Sign in</a> to save and track your links
+                <Link to="/login" className="text-brand-500 hover:underline">Sign in</Link> to save and track your links
               </p>
             )}
           </motion.form>

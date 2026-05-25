@@ -13,6 +13,7 @@ export default function Navbar({ transparent }: Props) {
   const { resolved, setTheme } = useThemeStore();
   const navigate           = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -51,12 +52,20 @@ export default function Navbar({ transparent }: Props) {
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
               </Link>
-              <div className="flex items-center gap-2 ml-1">
-                {user.photoURL
-                  ? <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full border" style={{ borderColor: 'var(--border)' }} />
-                  : <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
-                    </div>}
+              <div className="flex items-center gap-2 ml-1" key={user.uid}>
+                {user.photoURL && !avatarError ? (
+                  <img
+                    src={user.photoURL}
+                    alt=""
+                    className="w-8 h-8 rounded-full border"
+                    style={{ borderColor: 'var(--border)' }}
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                )}
                 <button onClick={handleLogout} className="btn-ghost gap-1.5 text-sm text-red-500 hover:text-red-600">
                   <LogOut className="w-4 h-4" />
                   Logout

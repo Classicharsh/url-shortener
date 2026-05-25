@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link2, MousePointerClick, TrendingUp, Clock, Plus } from 'lucide-react';
+import { Link2, MousePointerClick, TrendingUp, Clock, Plus, User } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import StatsCard from '@/components/dashboard/StatsCard';
 import LinkCard from '@/components/dashboard/LinkCard';
@@ -12,10 +12,30 @@ import { useLinksStore, useFilteredLinks } from '@/store/linksStore';
 import { formatCount } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 
+function LinkCardSkeleton() {
+  return (
+    <div className="card p-4 space-y-3 animate-pulse">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/3 skeleton" />
+          <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-1/2 skeleton" />
+        </div>
+        <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded-full w-12 skeleton" />
+      </div>
+      <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-3/4 skeleton" />
+      <div className="flex gap-4 pt-3 border-t" style={{ borderColor: 'var(--border)' }}>
+        <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-16 skeleton" />
+        <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-20 skeleton" />
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { user } = useAuthStore();
   const { links, loading, subscribeLinks, unsubscribeLinks } = useLinksStore();
   const filteredLinks = useFilteredLinks();
+  const [avatarError, setAvatarError] = useState(false);
 
   // Subscribe to real-time updates
   useEffect(() => {
@@ -53,9 +73,22 @@ export default function DashboardPage() {
           </div>
 
           {/* User avatar */}
-          {user?.photoURL && (
-            <img src={user.photoURL} alt="" className="w-10 h-10 rounded-full border-2"
-              style={{ borderColor: 'var(--border)' }} />
+          {user && (
+            <div key={user.uid}>
+              {user.photoURL && !avatarError ? (
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  className="w-10 h-10 rounded-full border-2"
+                  style={{ borderColor: 'var(--border)' }}
+                  onError={() => setAvatarError(true)}
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center border-2" style={{ borderColor: 'var(--border)' }}>
+                  <User className="w-5 h-5 text-white" />
+                </div>
+              )}
+            </div>
           )}
         </div>
 
@@ -101,8 +134,10 @@ export default function DashboardPage() {
             <LinkFilters />
 
             {loading && links.length === 0 ? (
-              <div className="flex justify-center py-16">
-                <LoadingSpinner size="lg" />
+              <div className="space-y-3">
+                <LinkCardSkeleton />
+                <LinkCardSkeleton />
+                <LinkCardSkeleton />
               </div>
             ) : filteredLinks.length === 0 ? (
               <motion.div

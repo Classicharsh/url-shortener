@@ -19,6 +19,42 @@ import toast from 'react-hot-toast';
 const DEVICE_COLORS = { mobile: '#0ea5e9', desktop: '#8b5cf6', tablet: '#10b981' };
 const CHART_COLORS  = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
 
+function AnalyticsSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Summary stats skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="card p-5 space-y-3">
+            <div className="w-5 h-5 bg-gray-200 dark:bg-gray-800 rounded skeleton" />
+            <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-16 skeleton" />
+            <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-12 skeleton" />
+          </div>
+        ))}
+      </div>
+
+      {/* Chart skeleton */}
+      <div className="card p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="w-5 h-5 bg-gray-200 dark:bg-gray-800 rounded skeleton" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-32 skeleton" />
+        </div>
+        <div className="h-60 bg-gray-200 dark:bg-gray-800 rounded w-full skeleton" />
+      </div>
+
+      {/* Grid skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[1, 2].map((i) => (
+          <div key={i} className="card p-6 space-y-4">
+            <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-32 skeleton" />
+            <div className="h-40 bg-gray-200 dark:bg-gray-800 rounded w-full skeleton" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AnalyticsPage() {
   const { linkId }     = useParams<{ linkId: string }>();
   const { links }      = useLinksStore();
@@ -102,9 +138,7 @@ export default function AnalyticsPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-24">
-            <LoadingSpinner size="lg" />
-          </div>
+          <AnalyticsSkeleton />
         ) : data ? (
           <div className="space-y-6">
             {/* Summary stats */}

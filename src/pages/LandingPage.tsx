@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useRef, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Zap, BarChart2, QrCode, Shield, Globe, MousePointerClick,
@@ -47,9 +47,23 @@ const stats = [
 export default function LandingPage() {
   const { user } = useAuthStore();
   const navigate  = useNavigate();
+  const location  = useLocation();
   const formRef   = useRef<HTMLDivElement>(null);
 
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Handle hash scrolling on mount or when hash changes (e.g., from footer links)
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }, [location.hash]);
 
   return (
     <div className="min-h-screen">
@@ -58,7 +72,7 @@ export default function LandingPage() {
       {/* ── Hero ────────────────────────────────────────── */}
       <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
         {/* Mesh background */}
-        <div className="absolute inset-0 bg-mesh-dark dark:bg-mesh-dark opacity-60 pointer-events-none" />
+        <div className="absolute inset-0 bg-mesh-light dark:bg-mesh-dark opacity-60 pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.15),transparent)] pointer-events-none" />
 
         {/* Grid pattern */}

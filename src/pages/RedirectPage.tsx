@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Lock, AlertCircle } from 'lucide-react';
 import { getLinkBySlug, trackClick } from '@/lib/firestore';
 import { isExpired } from '@/lib/utils';
-import type { Link } from '@/types';
+import type { Link as LinkType } from '@/types';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function RedirectPage() {
@@ -12,7 +12,7 @@ export default function RedirectPage() {
   const navigate   = useNavigate();
 
   const [status,   setStatus]   = useState<'loading' | 'expired' | 'not-found' | 'password' | 'redirecting'>('loading');
-  const [link,     setLink]     = useState<Link | null>(null);
+  const [link,     setLink]     = useState<LinkType | null>(null);
   const [password, setPassword] = useState('');
   const [pwError,  setPwError]  = useState('');
 
@@ -36,7 +36,7 @@ export default function RedirectPage() {
     }
   };
 
-  const doRedirect = async (l: Link) => {
+  const doRedirect = async (l: LinkType) => {
     setStatus('redirecting');
     // Fire analytics (non-blocking)
     trackClick(l).catch(console.error);
@@ -97,7 +97,7 @@ export default function RedirectPage() {
         <p className="text-sm text-center max-w-sm" style={{ color: 'var(--text-muted)' }}>
           This short link doesn't exist or has been removed.
         </p>
-        <a href="/" className="btn-primary text-sm">Go to Snip</a>
+        <Link to="/" className="btn-primary text-sm">Go to Snip</Link>
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function RedirectPage() {
         <p className="text-sm text-center max-w-sm" style={{ color: 'var(--text-muted)' }}>
           This link has passed its expiration date. Please contact the link owner for a new one.
         </p>
-        <a href="/" className="btn-primary text-sm">Go to Snip</a>
+        <Link to="/" className="btn-primary text-sm">Go to Snip</Link>
       </div>
     );
   }
